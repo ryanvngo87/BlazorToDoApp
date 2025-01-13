@@ -9,10 +9,9 @@
 <div class="mb-3">
     <!-- Input field for tasks -->
     <input type="text" @bind="newTask" class="form-control" placeholder="Enter a new task" />
-    <p>Current task: @newTask</p>
 
     <!-- Dropdown for assigning a category to the new task -->
-    <label for="assignCategory" class="form-label">Assign Category</label>
+    <label for="assignCategory" class="form-label">Assign Category:</label>
     <select @bind="SelectedCategoryId" class="form-select mt-2" id="assignCategory">
         <option value="">Select a category</option>
         @foreach (var category in categories)
@@ -25,6 +24,19 @@
     <button class="btn btn-success mt-2" @onclick="AddTask">
         <i class="fas fa-plus"></i> Add Task
     </button>
+</div>
+
+<!-- Filters task by category-->
+<div class="mb-3">
+    <label for="filterCategory" class="form-label">Filter by Category</label>
+    <!-- Triggers FilterTasks method when category is selected -->
+    <select @onchange="FilterTasks" class="form-select mt-2" id="filterCategory">
+        <option value="">All Categories</option>
+        @foreach (var category in categories)
+        {
+            <option value="@category.CategoryId">@category.Name</option>
+        }
+    </select>
 </div>
 
 <table class="table table-striped table-hover table-bordered">
@@ -63,6 +75,8 @@
     private List<TodoItem> tasks = new List<TodoItem>();
     private string newTask = string.Empty;
     private int? SelectedCategoryId;
+    private int? SelectedCategoryFilter;
+
 
     private string GetRowClass(TodoItem item)
     {
@@ -83,10 +97,25 @@
 
     private async Task LoadTasks()
     {
-        tasks = await DbContext.TodoItems
-            .Include(t => t.Category)
-            .Where(t => !t.IsCompleted)
-            .ToListAsync();
+        if (SelectedCategoryFilter.HasValue)
+        {
+            // Filter tasks by category
+            tasks = await DbContext.TodoItems
+                .Include(t => t.Category)
+                .Where(t => t.CategoryId == SelectedCategoryFilter && !t.IsCompleted)
+                .ToListAsync();
+        }
+        else
+        {
+            // Load all tasks
+            tasks = await DbContext.TodoItems
+                .Include(t => t.Category)
+                .Where(t => !t.IsCompleted)
+                .ToListAsync();
+        }
+
+        // Refresh the UI
+        StateHasChanged();
     }
 
     private async Task AddTask()
@@ -132,5 +161,12 @@
             await DbContext.SaveChangesAsync();
             await LoadTasks();
         }
+    }
+
+    // Method to filter tasks by category
+    private async Task FilterTasks(ChangeEventArgs e)
+    {
+        SelectedCategoryFilter = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
+        await LoadTasks();
     }
 }
