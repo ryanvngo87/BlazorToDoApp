@@ -1,0 +1,88 @@
+﻿@page "/edit-task/{id:int}"
+@inject BlazorToDoApp.Data.TodoContext DbContext
+@inject NavigationManager Navigation
+@using Microsoft.EntityFrameworkCore
+@using BlazorToDoApp.Data
+@using BlazorToDoApp.Models
+@rendermode InteractiveServer
+
+<h3>Edit Task</h3>
+
+@if (task == null)
+{
+    <p>Loading</p>
+}
+else
+{
+    <EditForm Model=task OnValidSubmit="SaveTask" OnInvalidSubmit="HandleValidation" FormName="EditTaskForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="taskDescription" class="form-label">Task Description</label>
+            <input type="text" id="taskDescription" class="form-control" @bind-value="@task.Task" />
+            <ValidationMessage For="@(() => task.Task)" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" id="isCompleted" class="form-check-input" @bind="task.IsCompleted" />
+            <label for="isCompleted" class="form-check-label">Mark as Completed</label>
+        </div>
+
+        <button class="btn btn-success" type="submit">Save</button>
+        <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private TodoItem task;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the task details based on task ID
+        task = await DbContext.TodoItems.FindAsync(Id);
+    }
+
+    private async Task SaveTask()
+    {
+        if (task != null)
+        {
+            // Update the task in the database
+            var existingTask = await DbContext.TodoItems.FindAsync(task.Id);
+
+            if (existingTask != null)
+            {
+                // Update existing task properties
+                existingTask.Task = task.Task;
+                existingTask.IsCompleted = task.IsCompleted;
+                Console.WriteLine($"Updated Task: {existingTask.Task}");
+
+                // Save changes to the database
+                await DbContext.SaveChangesAsync();
+                Console.WriteLine("Task updated successfully.");
+
+                // Navigate back to the dashboard
+                Navigation.NavigateTo("/completed-tasks");
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        // Go back to completed task page when canceling the edit
+        Navigation.NavigateTo("/completed-tasks");
+    }
+
+    private void HandleValidation()
+    {
+        // Handle validation logic here
+        Console.WriteLine("Invalid form submission.");
+    }
+}

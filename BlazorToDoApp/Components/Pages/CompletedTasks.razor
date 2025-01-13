@@ -1,0 +1,77 @@
+﻿@page "/completed-tasks"
+@inject BlazorToDoApp.Data.TodoContext DbContext
+@inject NavigationManager Navigation
+@using Microsoft.EntityFrameworkCore
+@using BlazorToDoApp.Data
+@using BlazorToDoApp.Models
+
+<h3>Completed Tasks</h3>
+
+@if (completedTasks == null || completedTasks.Count == 0)
+{
+    <p>No completed tasks available.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Date Completed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in completedTasks)
+            {
+                <tr>
+                    <td>@task.Task</td>
+                    <td>@task.CreatedAt.ToString("MMM dd, yyyy")</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => RestoreTask(task.Id)">
+                            <i class="fas fa-undo"></i> Restore
+                        </button>
+                        <a class="btn btn-warning btn-sm" href="/edit-task/@task.Id">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TodoItem> completedTasks = new List<TodoItem>();
+
+    private async Task LoadCompletedTasks()
+    {
+        // Load tasks that are marked as completed
+        completedTasks = await DbContext.TodoItems
+            .Where(t => t.IsCompleted)
+            .ToListAsync();
+        StateHasChanged();
+    }
+
+    private async Task RestoreTask(int id)
+    {
+        // Find the task by ID
+        var task = await DbContext.TodoItems.FindAsync(id);
+        if (task != null)
+        {
+            task.IsCompleted = false;
+            await DbContext.SaveChangesAsync();
+            await LoadCompletedTasks();
+        }
+    }
+
+    private void EditTask(TodoItem task)
+    {
+        Navigation.NavigateTo($"/edit-task/{task.Id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCompletedTasks();
+    }
+}

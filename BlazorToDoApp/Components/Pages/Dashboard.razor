@@ -1,0 +1,88 @@
+﻿@page "/dashboard"
+@inject BlazorToDoApp.Data.TodoContext DbContext
+@using Microsoft.EntityFrameworkCore
+@using BlazorToDoApp.Data
+@using BlazorToDoApp.Models
+
+<h3>Dashboard</h3>
+
+<div class="row">
+    <!-- Total Tasks Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Tasks</h5>
+                <p class="card-text">@totalTasks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Tasks Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Completed Tasks</h5>
+                <p class="card-text">@completedTasks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Tasks Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Pending Tasks</h5>
+                <p class="card-text">@pendingTasks</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Rate Chart -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h5>Task Completion Rate</h5>
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: @completionRate%" aria-valuenow="@completionRate" aria-valuemin="0" aria-valuemax="100">
+                @completionRate%
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Weekly Task Stats -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h5>Tasks Added in the Last 7 Days</h5>
+        <p>@tasksThisWeek tasks added this week</p>
+    </div>
+</div>
+
+
+@code {
+    private int totalTasks = 0;
+    private int completedTasks = 0;
+    private int pendingTasks = 0;
+    private int completionRate = 0;
+    private int tasksThisWeek = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboardData();
+    }
+
+    private async Task LoadDashboardData()
+    {
+        // Fetch tasks from the database
+        var tasks = await DbContext.TodoItems.ToListAsync();
+
+        // Calculate stats
+        totalTasks = tasks.Count;
+        completedTasks = tasks.Count(t => t.IsCompleted);
+        pendingTasks = totalTasks - completedTasks;
+        completionRate = totalTasks > 0 ? (completedTasks * 100) / totalTasks : 0;
+
+        // Calculate tasks added in the last 7 days
+        tasksThisWeek = tasks.Count(t => t.CreatedAt >= DateTime.Now.AddDays(-7));
+    }
+}

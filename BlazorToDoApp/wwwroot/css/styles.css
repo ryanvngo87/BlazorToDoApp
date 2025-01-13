@@ -1,0 +1,60 @@
+﻿/* Completed Tasks*/
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #000;
+}
+
+.nav-link {
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+    .nav-link:hover {
+        color: #f0ad4e;
+    }
+
+.bi {
+    margin-right: 8px;
+}
+
+/* Filter Panel */
+
+.filter-panel {
+    position: relative;
+    width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-panel h5 {
+    margin-bottom: 10px;
+}
+
+.filter-panel ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+.filter-panel li {
+    cursor: pointer;
+}
+
+.filter-panel li:hover {
+    background-color: #f8f9fa;
+}

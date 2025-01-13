@@ -1,0 +1,136 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject BlazorToDoApp.Data.TodoContext DbContext
+@using BlazorToDoApp.Models
+@using Microsoft.EntityFrameworkCore
+
+<h3>To Do List</h3>
+
+<div class="mb-3">
+    <!-- Input field for tasks -->
+    <input type="text" @bind="newTask" class="form-control" placeholder="Enter a new task" />
+    <p>Current task: @newTask</p>
+
+    <!-- Dropdown for assigning a category to the new task -->
+    <label for="assignCategory" class="form-label">Assign Category</label>
+    <select @bind="SelectedCategoryId" class="form-select mt-2" id="assignCategory">
+        <option value="">Select a category</option>
+        @foreach (var category in categories)
+        {
+            <option value="@category.CategoryId">@category.Name</option>
+        }
+    </select>
+
+    <!-- Button for adding tasks -->
+    <button class="btn btn-success mt-2" @onclick="AddTask">
+        <i class="fas fa-plus"></i> Add Task
+    </button>
+</div>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Task</th>
+            <th>Category</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in tasks)
+        {
+            <tr class="@GetRowClass(item)">
+                <td>@item.Task</td>
+                <td>@(item.Category != null ? item.Category.Name : "No Category")</td>
+                <td>
+                    <input type="checkbox" @bind="item.IsCompleted" @bind:after="() => UpdateTask(item)" />
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteTask(item.Id)">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    // Stores categories from the database
+    private List<Category> categories = new List<Category>();
+
+    // Stores tasks from the database
+    private List<TodoItem> tasks = new List<TodoItem>();
+    private string newTask = string.Empty;
+    private int? SelectedCategoryId;
+
+    private string GetRowClass(TodoItem item)
+    {
+        return item.IsCompleted ? "table-success" : "table-warning";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load categories and tasks
+        await LoadCategories();
+        await LoadTasks();
+    }
+
+    private async Task LoadCategories()
+    {
+        categories = await DbContext.Categories.ToListAsync();
+    }
+
+    private async Task LoadTasks()
+    {
+        tasks = await DbContext.TodoItems
+            .Include(t => t.Category)
+            .Where(t => !t.IsCompleted)
+            .ToListAsync();
+    }
+
+    private async Task AddTask()
+    {
+        Console.WriteLine("AddTask method triggered.");
+        Console.WriteLine($"New task: {newTask}");
+
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            var task = new TodoItem
+                {
+                    Task = newTask,
+                    IsCompleted = false,
+                    CategoryId = SelectedCategoryId
+                };
+
+            DbContext.TodoItems.Add(task);
+            await DbContext.SaveChangesAsync();
+
+            newTask = string.Empty;
+            SelectedCategoryId = null;
+            await LoadTasks();
+        }
+        else
+        {
+            Console.WriteLine("New task is empty.");
+        }
+    }
+
+    private async Task UpdateTask(TodoItem item)
+    {
+        DbContext.TodoItems.Update(item);
+        await DbContext.SaveChangesAsync();
+        await LoadTasks();
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+        if (task != null)
+        {
+            DbContext.TodoItems.Remove(task);
+            await DbContext.SaveChangesAsync();
+            await LoadTasks();
+        }
+    }
+}

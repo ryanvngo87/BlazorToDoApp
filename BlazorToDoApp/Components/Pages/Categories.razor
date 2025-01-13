@@ -1,0 +1,72 @@
+﻿@page "/categories"
+@inject BlazorToDoApp.Data.TodoContext DbContext
+@using BlazorToDoApp.Models
+@using Microsoft.EntityFrameworkCore
+@using BlazorToDoApp.Data
+@rendermode InteractiveServer
+
+<h3>Categories</h3>
+
+<div class="mb-3">
+    <input type="text" @bind="newCategoryName" class="form-control" placeholder="Enter a new category" />
+    <button class="btn btn-primary mt-2" @onclick="AddCategory">Add Category</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteCategory(category.CategoryId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Category> categories = new List<Category>();
+    private string newCategoryName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        categories = await DbContext.Categories.ToListAsync();
+    }
+
+    private async Task AddCategory()
+    {
+        if (!string.IsNullOrWhiteSpace(newCategoryName))
+        {
+            var category = new Category { Name = newCategoryName };
+            DbContext.Categories.Add(category);
+            await DbContext.SaveChangesAsync();
+
+            newCategoryName = string.Empty;
+            await LoadCategories();
+        }
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        var category = await DbContext.Categories.FindAsync(id);
+        if (category != null)
+        {
+            DbContext.Categories.Remove(category);
+            await DbContext.SaveChangesAsync();
+            await LoadCategories();
+        }
+    }
+}
