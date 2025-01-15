@@ -28,6 +28,7 @@ else
                     <td>@task.Task</td>
                     <td>@task.CreatedAt.ToString("MMM dd, yyyy")</td>
                     <td>
+                    <!-- Restore button should make task to incomplete -->
                         <button class="btn btn-primary btn-sm" @onclick="() => RestoreTask(task.Id)">
                             <i class="fas fa-undo"></i> Restore
                         </button>

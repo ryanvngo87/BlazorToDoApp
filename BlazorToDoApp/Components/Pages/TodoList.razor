@@ -7,8 +7,12 @@
 <h3>To Do List</h3>
 
 <div class="mb-3">
-    <!-- Input field for tasks -->
+    <!-- Tasks field -->
     <input type="text" @bind="newTask" class="form-control" placeholder="Enter a new task" />
+
+    <!-- Due date field -->
+    <label for="dueDate" class="form-label">Due Date</label>
+    <input type="date" @bind="newDueDate" class="form-control" id="dueDate" />
 
     <!-- Dropdown for assigning a category to the new task -->
     <label for="assignCategory" class="form-label">Assign Category:</label>
@@ -44,6 +48,7 @@
         <tr>
             <th>Task</th>
             <th>Category</th>
+            <th>Due Date</th>
             <th>Completed</th>
             <th>Actions</th>
         </tr>
@@ -54,6 +59,7 @@
             <tr class="@GetRowClass(item)">
                 <td>@item.Task</td>
                 <td>@(item.Category != null ? item.Category.Name : "No Category")</td>
+                <td>@item.DueDate?.ToString("MM/dd/yyyy")</td>
                 <td>
                     <input type="checkbox" @bind="item.IsCompleted" @bind:after="() => UpdateTask(item)" />
                 </td>
@@ -73,7 +79,10 @@
 
     // Stores tasks from the database
     private List<TodoItem> tasks = new List<TodoItem>();
+
+    // Input fields for adding tasks
     private string newTask = string.Empty;
+    private DateTime? newDueDate = null;
     private int? SelectedCategoryId;
     private int? SelectedCategoryFilter;
 
@@ -129,6 +138,7 @@
                 {
                     Task = newTask,
                     IsCompleted = false,
+                    DueDate = newDueDate,
                     CategoryId = SelectedCategoryId
                 };
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorToDoApp.Models
 {
@@ -13,5 +14,6 @@ namespace BlazorToDoApp.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int? CategoryId { get; set; }
         public Category Category { get; set; }
+        public DateTime? DueDate { get; set; }
     }
 }
