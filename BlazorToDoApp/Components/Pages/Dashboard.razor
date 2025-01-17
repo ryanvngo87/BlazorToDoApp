@@ -38,6 +38,14 @@
     </div>
 </div>
 
+<!-- Overdue Tasks Card -->
+<div class="card text-white bg-danger mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Overdue Tasks</h5>
+        <p class="card-text">@overdueTasks</p>
+    </div>
+</div>
+
 <!-- Completion Rate Chart -->
 <div class="row mt-4">
     <div class="col-md-12">
@@ -58,13 +66,13 @@
     </div>
 </div>
 
-
 @code {
     private int totalTasks = 0;
     private int completedTasks = 0;
     private int pendingTasks = 0;
     private int completionRate = 0;
     private int tasksThisWeek = 0;
+    private int overdueTasks = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,6 +89,7 @@
         completedTasks = tasks.Count(t => t.IsCompleted);
         pendingTasks = totalTasks - completedTasks;
         completionRate = totalTasks > 0 ? (completedTasks * 100) / totalTasks : 0;
+        overdueTasks = tasks.Count(t => t.DueDate.HasValue && t.DueDate.Value < DateTime.Now && !t.IsCompleted);
 
         // Calculate tasks added in the last 7 days
         tasksThisWeek = tasks.Count(t => t.CreatedAt >= DateTime.Now.AddDays(-7));

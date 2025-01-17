@@ -58,3 +58,10 @@
 .filter-panel li:hover {
     background-color: #f8f9fa;
 }
+
+/* Overdue tasks */
+
+.table-danger {
+    background-color: #fe2700;
+    color: #b16967
+}
