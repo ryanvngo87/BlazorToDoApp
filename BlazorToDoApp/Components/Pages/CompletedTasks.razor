@@ -4,6 +4,8 @@
 @using Microsoft.EntityFrameworkCore
 @using BlazorToDoApp.Data
 @using BlazorToDoApp.Models
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
 
 <h3>Completed Tasks</h3>
 
@@ -28,8 +30,7 @@ else
                     <td>@task.Task</td>
                     <td>@task.CreatedAt.ToString("MMM dd, yyyy")</td>
                     <td>
-                    <!-- Restore button should make task to incomplete -->
-                        <button class="btn btn-primary btn-sm" @onclick="() => RestoreTask(task.Id)">
+                        <button class="btn btn-primary btn-sm" @onclick="() => ConfirmRestoreTask(task.Id)">
                             <i class="fas fa-undo"></i> Restore
                         </button>
                         <a class="btn btn-warning btn-sm" href="/edit-task/@task.Id">
@@ -63,6 +64,16 @@ else
             task.IsCompleted = false;
             await DbContext.SaveChangesAsync();
             await LoadCompletedTasks();
+        }
+    }
+
+    private async Task ConfirmRestoreTask(int id)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to restore this task?");
+        if (confirm)
+        {
+            // Calls the RestoreTask method
+            await RestoreTask(id);
         }
     }
 
