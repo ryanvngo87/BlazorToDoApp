@@ -28,25 +28,25 @@ h3 {
 
 /* Styling for table */
 .table {
-    background-color: var(--card-background) !important;
-    border: 1px solid var(--input-border) !important;
+    background-color: var(--card-background);
+    border: 1px solid var(--input-border);
 }
 
 .table th, .table td {
-    color: var(--primary-text-color) !important;
-    border-color: var(--input-border) !important;
+    color: var(--primary-text-color);
+    border-color: var(--input-border);
 }
 
 /* Styling for table header row */
 .table-dark thead th {
-    background-color: var(--card-background) !important;
-    color: var(--highlight-color) !important;
+    background-color: var(--card-background);
+    color: var(--highlight-color);
 }
 
 /* Table tbody styling & hover effect */
 .table-dark tbody tr {
-    background-color: var(--card-background) !important;
-    color: var(--primary-text-color) !important;
+    background-color: var(--card-background);
+    color: var(--primary-text-color);
 }
 
 .table-dark tbody tr:focus {
@@ -65,13 +65,22 @@ h3 {
 }
 
 .table-success {
-    background-color: #214126 !important;
+    background-color: #214126;
     color: var(--highlight-color);
 }
 
-.table-danger {
-    background-color: #421212 !important;
-    color: #FF6F6F;
+.table-dark tbody tr.overdue-row {
+    color: red;
+}
+
+.table-dark tbody tr:not(.overdue-row) {
+    background-color: var(--card-background);
+    color: var(--primary-text-color);
+}
+
+.table-dark tbody tr.overdue-row:hover {
+    background-color: #ff1a1a; /* Darker red on hover */
+    color: #ffffff;
 }
 
 /* Input field styling */
@@ -84,14 +93,14 @@ input, select {
 }
 
 input::placeholder {
-    color: var(--secondary-text-color) !important;
+    color: var(--secondary-text-color);
     font-style: italic;
 }
 
 input[type="text"], input[type="date"], input[type="time"], select {
-    background-color: var(--input-background) !important;
-    color: var(--input-text) !important;
-    border: 1px solid var(--input-border) !important;
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     padding: 8px;
     width: 100%;
@@ -115,12 +124,12 @@ input[type="text"], input[type="date"], input[type="time"], select {
 
 /* Highlight Rows */
 .table-success {
-    background-color: #214126 !important;
+    background-color: #214126;
     color: var(--highlight-color);
 }
 
 .table-danger {
-    background-color: #421212 !important;
+    background-color: #421212;
     color: #FF6F6F;
 }
 

@@ -9,6 +9,7 @@
 
 <h3>Completed Tasks</h3>
 
+<div class="completed-container">
 @if (completedTasks == null || completedTasks.Count == 0)
 {
     <p>No completed tasks available.</p>
@@ -42,7 +43,7 @@ else
         </tbody>
     </table>
 }
-
+</div>
 @code {
     private List<TodoItem> completedTasks = new List<TodoItem>();
 

@@ -59,13 +59,6 @@
     background-color: #f8f9fa;
 }
 
-/* Overdue tasks */
-
-.table-danger {
-    background-color: #fe2700;
-    color: #b16967
-}
-
 /* Spacing adjustments */
 .mb-3, .form-control, .form-select {
     margin-bottom: 20px;
@@ -93,4 +86,81 @@ table {
 /* Add spacing around buttons */
 .spacing-button {
     margin-top: 20px;
+}
+
+/* HOME - Width and spacing adjustments */
+.home-container {
+    width: 70%; 
+    margin-left: 20px; 
+    max-width: 1200px; 
+}
+
+.form-control, .form-select {
+    width: 100%;
+    max-width: 100%; 
+}
+
+.table {
+    width: 100%;
+}
+
+
+/* DASHBOARD - Width and spacing adjustments */
+.dashboard-container {
+    width: 70%;
+    margin-left: 20px;
+    max-width: 1200px;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center; 
+}
+
+.progress {
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* CATEGORY - Width and spacing adjustments */
+
+.category-container {
+    width: 50%;
+    margin-left: 20px;
+    max-width: 1200px;
+}
+
+.table th, .table td {
+    padding: 8px; /* Reduce the padding */
+    text-align: center; /* Center-align content */
+    vertical-align: middle; /* Ensure vertical alignment */
+}
+
+.table {
+
+    width: 90%; /* Limit the width to reduce excessive white space */
+}
+
+/* COMPLETED TASKS - Width and spacing adjustments */
+
+.completed-container {
+    width: 50%;
+    margin-left: 20px;
+    max-width: 1200px;
+}
+
+/* EDIT TASKS - Width and spacing adjustments */
+
+.edit-container {
+    width: 50%;
+    margin-left: 20px;
+    max-width: 1200px;
 }

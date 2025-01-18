@@ -7,91 +7,93 @@
 
 <h3>Task Home Page</h3>
 
-<div class="mb-4 section">
-    <!-- Tasks field -->
-    <label for="newTask" class="form-label">Task Name</label>
-    <input type="text" @bind="newTask" class="form-control mb-3 spacing-input" placeholder="Enter a new task" />
+<div class="home-container">
+    <div class="mb-4 section">
+        <!-- Tasks field -->
+        <label for="newTask" class="form-label">Task Name</label>
+        <input type="text" @bind="newTask" class="form-control mb-3 spacing-input" placeholder="Enter a new task" />
 
-    <!-- Due date field -->
-    <label for="dueDate" class="form-label">Due Date</label>
-    <input type="date" @bind="newDueDate" class="form-control mb-3 spacing-input" id="dueDate" />
+        <!-- Due date field -->
+        <label for="dueDate" class="form-label">Due Date</label>
+        <input type="date" @bind="newDueDate" class="form-control mb-3 spacing-input" id="dueDate" />
 
-    <!-- Due time field -->
-    <label for="dueTime" class="form-label">Due Time</label>
-    <input type="text" list="fiveMinuteInterval" @bind="newDueTime" class="form-control mb-3 spacing-input" id="dueTime" placeholder="HH:mm" />
+        <!-- Due time field -->
+        <label for="dueTime" class="form-label">Due Time</label>
+        <input type="text" list="fiveMinuteInterval" @bind="newDueTime" class="form-control mb-3 spacing-input" id="dueTime" placeholder="HH:mm" />
 
-    <!-- Lists all the times in 5 minute intervals -->
-    <datalist id="fiveMinuteInterval">
-        @for (var hour = 0; hour < 24; hour++)
-        {
-            for (var minute = 0; minute < 60; minute += 5)
+        <!-- Lists all the times in 5 minute intervals -->
+        <datalist id="fiveMinuteInterval">
+            @for (var hour = 0; hour < 24; hour++)
             {
-                var time = new DateTime(1, 1, 1, hour, minute, 0);
-                <option value="@time.ToString("hh:mm tt")"></option>
+                for (var minute = 0; minute < 60; minute += 5)
+                {
+                    var time = new DateTime(1, 1, 1, hour, minute, 0);
+                    <option value="@time.ToString("hh:mm tt")"></option>
+                }
+            })
+        </datalist>
+
+        <!-- Dropdown for assigning a category to the new task -->
+        <label for="assignCategory" class="form-label">Assign Category:</label>
+        <select @bind="SelectedCategoryId" class="form-select mb-3 spacing-button" id="assignCategory">
+            <option value="">Select a category</option>
+            @foreach (var category in categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
             }
-        })
-    </datalist>
+        </select>
 
-    <!-- Dropdown for assigning a category to the new task -->
-    <label for="assignCategory" class="form-label">Assign Category:</label>
-    <select @bind="SelectedCategoryId" class="form-select mb-3 spacing-button" id="assignCategory">
-        <option value="">Select a category</option>
-        @foreach (var category in categories)
-        {
-            <option value="@category.CategoryId">@category.Name</option>
-        }
-    </select>
+        <!-- Button for adding tasks -->
+        <button class="btn btn-success mt-2 spacing-button" @onclick="AddTask">
+            <i class="fas fa-plus"></i> Add Task
+        </button>
+    </div>
 
-    <!-- Button for adding tasks -->
-    <button class="btn btn-success mt-2 spacing-button" @onclick="AddTask">
-        <i class="fas fa-plus"></i> Add Task
-    </button>
-</div>
+    <!-- Filters task by category-->
+    <div class="mb-4 section">
+        <label for="filterCategory" class="form-label">Filter by Category</label>
+        <!-- Triggers FilterTasks method when category is selected -->
+        <select @onchange="FilterTasks" class="form-select spacing-input" id="filterCategory">
+            <option value="">All Categories</option>
+            @foreach (var category in categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        </select>
+    </div>
 
-<!-- Filters task by category-->
-<div class="mb-4 section">
-    <label for="filterCategory" class="form-label">Filter by Category</label>
-    <!-- Triggers FilterTasks method when category is selected -->
-    <select @onchange="FilterTasks" class="form-select spacing-input" id="filterCategory">
-        <option value="">All Categories</option>
-        @foreach (var category in categories)
-        {
-            <option value="@category.CategoryId">@category.Name</option>
-        }
-    </select>
-</div>
-
-<table class="table table-striped table-hover table-bordered table-dark">
-    <thead class="table-dark">
-        <tr>
-            <th>Task</th>
-            <th>Category</th>
-            <th>Due Date</th>
-            <th>Overdue</th>
-            <th>Completed</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in tasks)
-        {
-            <tr class="@GetRowClass(item)">
-                <td>@item.Task</td>
-                <td>@(item.Category != null ? item.Category.Name : "No Category")</td>
-                <td>@item.DueDate?.ToString("MM/dd/yyyy hh:mm tt")</td>
-                <td>@(item.DueDate.HasValue && item.DueDate.Value < DateTime.Now && !item.IsCompleted ? "Yes" : "No")</td>
-                <td>
-                    <input type="checkbox" @bind="item.IsCompleted" @bind:after="() => UpdateTask(item)" />
-                </td>
-                <td>
-                    <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteTask(item.Id)">
-                        <i class="fas fa-trash-alt"></i> Delete
-                    </button>
-                </td>
+    <table class="table table-striped table-hover table-bordered table-dark">
+        <thead class="table-dark">
+            <tr>
+                <th>Task</th>
+                <th>Category</th>
+                <th>Due Date</th>
+                <th>Overdue</th>
+                <th>Completed</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in tasks)
+            {
+                <tr class="@GetRowClass(item)">
+                    <td>@item.Task</td>
+                    <td>@(item.Category != null ? item.Category.Name : "No Category")</td>
+                    <td>@item.DueDate?.ToString("MM/dd/yyyy hh:mm tt")</td>
+                    <td>@(item.DueDate.HasValue && item.DueDate.Value < DateTime.Now && !item.IsCompleted ? "Yes" : "No")</td>
+                    <td>
+                        <input type="checkbox" @bind="item.IsCompleted" @bind:after="() => UpdateTask(item)" />
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteTask(item.Id)">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
     // Stores categories from the database
@@ -116,7 +118,7 @@
         }
         if (item.DueDate.HasValue && item.DueDate.Value < DateTime.Now)
         {
-            return "table-danger";
+            return "overdue-row";
         }
         return "table-dark-row";
     }

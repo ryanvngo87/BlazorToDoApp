@@ -8,30 +8,32 @@
 
 <h3>Categories</h3>
 
-<div class="mb-3">
-    <input type="text" @bind="newCategoryName" class="form-control" placeholder="Enter a new category" />
-    <button class="btn btn-primary mt-2" @onclick="AddCategory">Add Category</button>
-</div>
+<div class="category-container">
+    <div class="mb-3">
+        <input type="text" @bind="newCategoryName" class="form-control" placeholder="Enter a new category" />
+        <button class="btn btn-primary mt-2" @onclick="AddCategory">Add Category</button>
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Category</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var category in categories)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@category.Name</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteCategory(category.CategoryId)">Delete</button>
-                </td>
+                <th>Category</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var category in categories)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteCategory(category.CategoryId)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
     private List<Category> categories = new List<Category>();

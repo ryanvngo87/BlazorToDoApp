@@ -9,31 +9,33 @@
 
 <h3>Edit Task</h3>
 
-@if (task == null)
-{
-    <p>Loading</p>
-}
-else
-{
-    <EditForm Model=task OnValidSubmit="ConfirmAndSaveTask" OnInvalidSubmit="HandleValidation" FormName="EditTaskForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="edit-container">
+    @if (task == null)
+    {
+        <p>Loading</p>
+        }
+    else
+    {
+        <EditForm Model=task OnValidSubmit="ConfirmAndSaveTask" OnInvalidSubmit="HandleValidation" FormName="EditTaskForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-        <div class="mb-3">
-            <label for="taskDescription" class="form-label">Task Description</label>
-            <input type="text" id="taskDescription" class="form-control" @bind-value="@task.Task" />
-            <ValidationMessage For="@(() => task.Task)" />
-        </div>
+            <div class="mb-3">
+                <label for="taskDescription" class="form-label">Task Description</label>
+                <input type="text" id="taskDescription" class="form-control" @bind-value="@task.Task" />
+                <ValidationMessage For="@(() => task.Task)" />
+            </div>
 
-        <div class="form-check mb-3">
-            <input type="checkbox" id="isCompleted" class="form-check-input" @bind="task.IsCompleted" />
-            <label for="isCompleted" class="form-check-label">Mark as Completed</label>
-        </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" id="isCompleted" class="form-check-input" @bind="task.IsCompleted" />
+                <label for="isCompleted" class="form-check-label">Mark as Completed</label>
+            </div>
 
-        <button class="btn btn-success" type="submit">Save</button>
-        <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
-    </EditForm>
-}
+            <button class="btn btn-success" type="submit">Save</button>
+            <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+        </EditForm>
+    }
+</div>
 
 @code {
     [Parameter]

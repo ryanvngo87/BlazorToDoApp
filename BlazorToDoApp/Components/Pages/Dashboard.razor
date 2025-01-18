@@ -6,66 +6,69 @@
 
 <h3>Dashboard</h3>
 
-<div class="row">
-    <!-- Total Tasks Card -->
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Total Tasks</h5>
-                <p class="card-text">@totalTasks</p>
+<div class="dashboard-container">
+    <div class="row mb-4">
+            <!-- Total Tasks Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Tasks</h5>
+                        <p class="card-text">@totalTasks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tasks Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Completed Tasks</h5>
+                        <p class="card-text">@completedTasks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Tasks Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Tasks</h5>
+                        <p class="card-text">@pendingTasks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Tasks Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Overdue Tasks</h5>
+                        <p class="card-text">@overdueTasks</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- Completion Rate Chart -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h5>Task Completion Rate</h5>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: @completionRate%" aria-valuenow="@completionRate" aria-valuemin="0" aria-valuemax="100">
+                    @completionRate%
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Completed Tasks Card -->
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Completed Tasks</h5>
-                <p class="card-text">@completedTasks</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pending Tasks Card -->
-    <div class="col-md-4">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Pending Tasks</h5>
-                <p class="card-text">@pendingTasks</p>
-            </div>
+    <!-- Weekly Task Stats -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h5>Tasks Added in the Last 7 Days</h5>
+            <p>@tasksThisWeek tasks added this week</p>
         </div>
     </div>
 </div>
-
-<!-- Overdue Tasks Card -->
-<div class="card text-white bg-danger mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Overdue Tasks</h5>
-        <p class="card-text">@overdueTasks</p>
-    </div>
-</div>
-
-<!-- Completion Rate Chart -->
-<div class="row mt-4">
-    <div class="col-md-12">
-        <h5>Task Completion Rate</h5>
-        <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar" style="width: @completionRate%" aria-valuenow="@completionRate" aria-valuemin="0" aria-valuemax="100">
-                @completionRate%
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Weekly Task Stats -->
-<div class="row mt-4">
-    <div class="col-md-12">
-        <h5>Tasks Added in the Last 7 Days</h5>
-        <p>@tasksThisWeek tasks added this week</p>
-    </div>
-</div>
-
 @code {
     private int totalTasks = 0;
     private int completedTasks = 0;
