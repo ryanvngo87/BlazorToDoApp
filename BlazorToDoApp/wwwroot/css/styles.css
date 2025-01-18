@@ -65,3 +65,32 @@
     background-color: #fe2700;
     color: #b16967
 }
+
+/* Spacing adjustments */
+.mb-3, .form-control, .form-select {
+    margin-bottom: 20px;
+}
+
+.btn {
+    margin-top: 10px;
+}
+
+table {
+    margin-top: 30px;
+}
+
+/* Add padding inside sections */
+.section {
+    padding: 20px;
+}
+
+/* Add spacing between labels and inputs */
+.spacing-input {
+    margin-top: 5px;
+    margin-bottom: 15px; 
+}
+
+/* Add spacing around buttons */
+.spacing-button {
+    margin-top: 20px;
+}

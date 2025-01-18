@@ -5,19 +5,20 @@
 @using Microsoft.EntityFrameworkCore
 @inject IJSRuntime JSRuntime
 
-<h3>To Do List</h3>
+<h3>Task Home Page</h3>
 
-<div class="mb-3">
+<div class="mb-4 section">
     <!-- Tasks field -->
-    <input type="text" @bind="newTask" class="form-control" placeholder="Enter a new task" />
+    <label for="newTask" class="form-label">Task Name</label>
+    <input type="text" @bind="newTask" class="form-control mb-3 spacing-input" placeholder="Enter a new task" />
 
     <!-- Due date field -->
     <label for="dueDate" class="form-label">Due Date</label>
-    <input type="date" @bind="newDueDate" class="form-control" id="dueDate" />
+    <input type="date" @bind="newDueDate" class="form-control mb-3 spacing-input" id="dueDate" />
 
     <!-- Due time field -->
     <label for="dueTime" class="form-label">Due Time</label>
-    <input type="text" list="fiveMinuteInterval" @bind="newDueTime" class="form-control" id="dueTime" placeholder="HH:mm" />
+    <input type="text" list="fiveMinuteInterval" @bind="newDueTime" class="form-control mb-3 spacing-input" id="dueTime" placeholder="HH:mm" />
 
     <!-- Lists all the times in 5 minute intervals -->
     <datalist id="fiveMinuteInterval">
@@ -33,7 +34,7 @@
 
     <!-- Dropdown for assigning a category to the new task -->
     <label for="assignCategory" class="form-label">Assign Category:</label>
-    <select @bind="SelectedCategoryId" class="form-select mt-2" id="assignCategory">
+    <select @bind="SelectedCategoryId" class="form-select mb-3 spacing-button" id="assignCategory">
         <option value="">Select a category</option>
         @foreach (var category in categories)
         {
@@ -42,16 +43,16 @@
     </select>
 
     <!-- Button for adding tasks -->
-    <button class="btn btn-success mt-2" @onclick="AddTask">
+    <button class="btn btn-success mt-2 spacing-button" @onclick="AddTask">
         <i class="fas fa-plus"></i> Add Task
     </button>
 </div>
 
 <!-- Filters task by category-->
-<div class="mb-3">
+<div class="mb-4 section">
     <label for="filterCategory" class="form-label">Filter by Category</label>
     <!-- Triggers FilterTasks method when category is selected -->
-    <select @onchange="FilterTasks" class="form-select mt-2" id="filterCategory">
+    <select @onchange="FilterTasks" class="form-select spacing-input" id="filterCategory">
         <option value="">All Categories</option>
         @foreach (var category in categories)
         {
@@ -60,7 +61,7 @@
     </select>
 </div>
 
-<table class="table table-striped table-hover table-bordered">
+<table class="table table-striped table-hover table-bordered table-dark">
     <thead class="table-dark">
         <tr>
             <th>Task</th>
@@ -109,12 +110,15 @@
 
     private string GetRowClass(TodoItem item)
     {
-        if (!item.IsCompleted && item.DueDate.HasValue && item.DueDate.Value < DateTime.Now)
+        if (item.IsCompleted)
+        {
+            return "table-success";
+        }
+        if (item.DueDate.HasValue && item.DueDate.Value < DateTime.Now)
         {
             return "table-danger";
         }
-
-        return item.IsCompleted ? "table-success" : "table-warning";
+        return "table-dark-row";
     }
 
     protected override async Task OnInitializedAsync()
